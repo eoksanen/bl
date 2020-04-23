@@ -2,8 +2,8 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-    "title": "third",
-    "author": "H2",
+    "title": "four",
+    "author": "H2O",
     "url": "www.guardian.uk",
-    "likes": 14
+    "likes": 17
 }
