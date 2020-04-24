@@ -1,10 +1,14 @@
 const palindrome = require('../utils/for_testing').palindrome
 
+
+
 test('palindrome of a', () => {
   const result = palindrome('a')
 
   expect(result).toBe('a')
 })
+
+
 
 test('palindrome of react', () => {
   const result = palindrome('react')
@@ -12,8 +16,18 @@ test('palindrome of react', () => {
   expect(result).toBe('tcaer')
 })
 
+describe('palindrome of classic examples', () => {
+
 test('palindrome of saippuakauppias', () => {
   const result = palindrome('saippuakauppias')
 
   expect(result).toBe('saippuakauppias')
+  })
+
+test('palindrome of innostunutsonni', () => {
+    const result = palindrome('innostunutsonni')
+  
+    expect(result).toBe('innostunutsonni')
+    })
+
 })
