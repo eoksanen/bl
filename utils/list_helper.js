@@ -33,10 +33,16 @@ return result
 /*
     var wanted = items.filter( function(item)
     {return (item.age==18);} );
+    
 */
+const likes = blogs.map(blog => {
+    
+  return blog.likes
+
+})
     const most = blogs.filter(blog => {
     
-      return (blog.likes === 12)
+      return (blog.likes === Math.max(...likes))
 
     })
     console.log(most)
