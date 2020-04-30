@@ -29,10 +29,26 @@ return result
 
 
   }
+  const favoriteBlog = (blogs) => {
+/*
+    var wanted = items.filter( function(item)
+    {return (item.age==18);} );
+*/
+    const most = blogs.filter(blog => {
+    
+      return (blog.likes === 12)
+
+    })
+    console.log(most)
+    return most
+
+
+  }
 
   
   module.exports = {
     dummy,
     totalLikes,
     maxLikes,
+    favoriteBlog,
   }
