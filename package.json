@@ -4,14 +4,20 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "jest --verbose",
-    "dev": "nodemon index.js"
+    "start": "cross-env NODE ENV=production node index.js",
+    "test": "cross-env NODE_ENV=test jest --verbose  --runInBand",
+    "dev": "cross-env NODE_ENV=development nodemon index.js",
+    "build:ui": "rm -rf build && cd ../../../2/luento/notes && npm run build && cp -r build ../../../3/luento/notes-backend",
+    "deploy": "git push heroku master",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && git push && npm run deploy",
+    "logs:prod": "heroku logs --tail",
+    "lint": "eslint ."
   },
   "author": "E",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
+    "cross-env": "^7.0.2",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "mongoose": "^5.9.10",
@@ -19,7 +25,8 @@
   },
   "devDependencies": {
     "jest": "^25.4.0",
-    "nodemon": "^2.0.3"
+    "nodemon": "^2.0.3",
+    "supertest": "^4.0.2"
   },
   "jest": {
     "testEnvironment": "node"
