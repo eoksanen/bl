@@ -27,6 +27,26 @@ test('is id defined', async () => {
   console.log(blogs)
 })
 
+test('add blog test', async () => {
+
+
+  api.post('/api/blogs', async (request, Response) => {
+    const body = request.body
+
+    const newBlog = new Blog({
+      content: 'testBlog',
+      title: 'Testing',
+      author: 'String',
+      url: 'String',
+      likes: 100
+    })
+    
+  const savedBlog = await newBlog.save()
+  response.json(savedBlog.toJSON())
+  })
+})
+
+
 afterAll(() => {
   mongoose.connection.close()
 })
