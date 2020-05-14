@@ -1,0 +1,10 @@
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJsb25kIiwiaWQiOiI1ZWJjZWNiMDdhZTMzMjQxZjg3MTIwMDYiLCJpYXQiOjE1ODk0NDY1MTV9.9pN_ZY6WOW3-2zRlX8OxxVUWgzhxATfW9cLCiuGLfg0
+
+{
+    "title": "some blog testing3",
+    "author": "Eskar Kaskas",
+    "url": "www",
+    "likes": true
+}

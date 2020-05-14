@@ -1,0 +1,8 @@
+POST http://localhost:3001/api/notes
+Content-Type: application/json
+Authorization: Bearer 3d7cd333
+
+  {
+    "username": "mluukkai",
+    "_id": 123456
+  }
