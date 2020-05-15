@@ -1,6 +1,12 @@
 const Blog = require('../models/blog')
 const User = require('../models/user')
 
+const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjVlYmU3NmIwNmY3NjYxMTI2NGQwMDM5NCIsImlhdCI6MTU4OTU0MTc3MH0.ZpDnV5w1JdmXVy74bXOFQMEz4zo9c4KieUA4AKdRPXk"
+const root = {
+  username: "root",
+  password: "sekret"
+}
+
 const initialBlogs = [
     { title: "React patterns", author: "Michael Chan", url: "https://reactpatterns.com/", likes: 7 }, 
     { title: "Go To Statement Considered Harmful", author: "Edsger W. Dijkstra", url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html", likes: 5 }, 
