@@ -7,33 +7,40 @@ const api = supertest(app)
 
 const Blog = require('../models/blog')
 
+let token;
+
+beforeAll((done) => {
+  api
+    .post('/api/login')
+    .send(
+    //helper.root
+     {      
+      username: 'root',
+      password: 'sekret', 
+    }
+    )
+    .end((err, response) => {
+      console.log('server response: ', response)
+      token = response.body.token; // save the token!
+      console.log('res TOKEN: ', token)
+      done();
+    });
+});
 
 
 beforeEach(async () => {
   await Blog.deleteMany({})
   console.log('all deleted')
 
-  const blogObjects = helper.initialBlogs.map(blog => new Blog(blog))
+
+  const userIdAdded = helper.initialBlogs.map(bl => {
+    bl.user = "5ebe76b06f76611264d00394"
+    return bl
+  })
+  const blogObjects = userIdAdded.map(blog => new Blog(blog))
   const promiseArray = blogObjects.map(blog => blog.save())
   await Promise.all(promiseArray)
-/*
-  await api
-  .post('/api/login')
-  .send(helper.root)
-  .end((err, response)=>{
-    loggedInToken = response.body.token;
-    console.log(loggedInToken)
-    done();
-  });
-  
-/*
-   helper.initialBlogs.forEach(async (blog) => {
-    let blogObject = new Blog(blog)
-    await blogObject.save()
-    
-    console.log('saved')
-   })
-   */
+
   })
   
 test('a valid blog can be added ', async () => {
@@ -42,7 +49,7 @@ test('a valid blog can be added ', async () => {
   await api
     .post('/api/blogs')
     .send(newBlog)
-    .set('Authorization', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjVlYmU3NmIwNmY3NjYxMTI2NGQwMDM5NCIsImlhdCI6MTU4OTU0MTc3MH0.ZpDnV5w1JdmXVy74bXOFQMEz4zo9c4KieUA4AKdRPXk")
+    .set('Authorization', token)
     .expect(200)
     .expect('Content-Type', /application\/json/)
 
@@ -59,7 +66,7 @@ test('a blog can be deleted', async () => {
 
   await api
     .delete(`/api/blogs/${blogToDelete.id}`)
-    .set('Authorization', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjVlYmU3NmIwNmY3NjYxMTI2NGQwMDM5NCIsImlhdCI6MTU4OTU0MTc3MH0.ZpDnV5w1JdmXVy74bXOFQMEz4zo9c4KieUA4AKdRPXk")
+    .set('Authorization', token)
     .expect(204)
 
   const blogsAtEnd = await helper.blogsInDb()
@@ -80,7 +87,7 @@ test('blog can be edited', async () => {
 console.log(allBlogs[0].id)
   await api
     .put(`/api/blogs/${allBlogs[0].id}`)
-    .set('Authorization', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjVlYmU3NmIwNmY3NjYxMTI2NGQwMDM5NCIsImlhdCI6MTU4OTU0MTc3MH0.ZpDnV5w1JdmXVy74bXOFQMEz4zo9c4KieUA4AKdRPXk")
+    .set('Authorization', token)
     .send({ likes: 100 })
     .expect(200)
     .expect('Content-Type', /application\/json/)
@@ -90,7 +97,7 @@ console.log(allBlogs[0].id)
 test('blogs are returned as json', async () => {
   await api
     .get('/api/blogs')
-    .set('Authorization', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjVlYmU3NmIwNmY3NjYxMTI2NGQwMDM5NCIsImlhdCI6MTU4OTU0MTc3MH0.ZpDnV5w1JdmXVy74bXOFQMEz4zo9c4KieUA4AKdRPXk")
+    .set('Authorization', token)
     .expect(200)
     .expect('Content-Type', /application\/json/)
 })
@@ -112,7 +119,7 @@ test('blogs without likes goes to zero', async () => {
 
   await api
   .post('/api/blogs')
-  .set('Authorization', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjVlYmU3NmIwNmY3NjYxMTI2NGQwMDM5NCIsImlhdCI6MTU4OTU0MTc3MH0.ZpDnV5w1JdmXVy74bXOFQMEz4zo9c4KieUA4AKdRPXk")
+  .set('Authorization', token)
   .send(testBlog)
   .expect(200)
   .expect('Content-Type', /application\/json/)
@@ -136,7 +143,7 @@ test('title missing', async () => {
 
   await api
   .post('/api/blogs')
-  .set('Authorization', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjVlYmU3NmIwNmY3NjYxMTI2NGQwMDM5NCIsImlhdCI6MTU4OTU0MTc3MH0.ZpDnV5w1JdmXVy74bXOFQMEz4zo9c4KieUA4AKdRPXk")
+  .set('Authorization', token)
   .send(testBlog)
   .expect(400)
 
@@ -153,7 +160,7 @@ test('title missing', async () => {
   
     await api
     .post('/api/blogs')
-    .set('Authorization', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjVlYmU3NmIwNmY3NjYxMTI2NGQwMDM5NCIsImlhdCI6MTU4OTU0MTc3MH0.ZpDnV5w1JdmXVy74bXOFQMEz4zo9c4KieUA4AKdRPXk")
+    .set('Authorization', token)
     .send(testBlog2)
     .expect(400)
   

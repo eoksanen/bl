@@ -1,10 +1,11 @@
 const Blog = require('../models/blog')
 const User = require('../models/user')
+//import axios from 'axios'
 
 const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjVlYmU3NmIwNmY3NjYxMTI2NGQwMDM5NCIsImlhdCI6MTU4OTU0MTc3MH0.ZpDnV5w1JdmXVy74bXOFQMEz4zo9c4KieUA4AKdRPXk"
 const root = {
   username: "root",
-  password: "sekret"
+  password: "sekret",
 }
 
 const initialBlogs = [
@@ -16,6 +17,8 @@ const initialBlogs = [
     { title: "Type wars", author: "Robert C. Martin", url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html", likes: 2 },
     { title: "A New Hope", author: "Robert C. Martin", url: "https://blog.cleancoder.com/uncle-bob/2020/04/05/ANewHope.html", likes: 102 }
 ]
+
+const userIdAdded = initialBlogs.forEach((f) => {f.user = "5ebe76b06f76611264d00394"})
 
 const nonExistingId = async () => {
   const blog = new blog({ title: 'willremovethissoon' })
@@ -35,6 +38,13 @@ const usersInDb = async () => {
   return users.map(user => user.toJSON())
 }
 
+const baseUrl = '/api/login'
+/*
+  const login = async credentials => {
+    const response = await axios.post(baseUrl, credentials)
+    return response.data
+}
+*/
 module.exports = {
-  initialBlogs, nonExistingId, blogsInDb, usersInDb,
+  initialBlogs, userIdAdded, nonExistingId, blogsInDb, usersInDb//, login
 }

@@ -1,3 +1,5 @@
+const lodash = require('lodash')
+
 const dummy = (blogs) => {
     
   return 1
@@ -48,6 +50,14 @@ const likes = blogs.map(blog => {
     console.log(most)
     return most
 
+
+  }
+  const mostBlogs = (blogs) => {
+
+
+  }
+
+  const mostLikes = (blogs) => {
 
   }
 
