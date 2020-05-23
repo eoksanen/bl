@@ -27,7 +27,10 @@ const errorHandler = (error, request, response, next) => {
 }
 
 const tokenExtrator = (request, response, next) => {
-    request.token = request.get('authorization')
+  const subToken = request.get('authorization')
+  if(subToken){
+    request.token = subToken.substring(7)
+  }
         next()
   }
 
