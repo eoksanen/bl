@@ -33,33 +33,14 @@ blogsRouter.get('/', async (request, response) => {
         likes: body.likes,
         user: user._id
         })
-      let savedBlog = await newBlog.save()
+      let sblogi = await newBlog.save()
+      console.log('saved Blog: ',sblogi)
+      const savedBlog = await Blog.findById(sblogi._id).populate('user', { username: 1, name: 1 })
+    
+  
 
     
-/*
-      book.save(function(err, book) {
-        Book // Book not book
-        .populate(book, { path: '_creator'})
-        .then(function(book) {
-            // Do something
-        })
-    });
-        */
-        /*function(err, bl) {
-        bl
-        .populate('user', { username: 1, name: 1 })})
-    */
-    //  const populatedBlog = await Blog.findById(savedBlog.user).populate('user', { username: 1, name: 1 })
-
-/*
-    savedBlog.user.push({
-      username: user.name,
-      name: user.name,
-      id: user._id
-          })
-*/
-    
-      console.log('SAVED BLOG: ',savedBlog)
+      console.log('Finded BLOG: ',savedBlog)
      // console.log('PPULATED BLOG: ',populatedBlog)
       user.blogs = user.blogs.concat(savedBlog._id)
       await user.save()
