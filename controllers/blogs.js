@@ -33,18 +33,32 @@ blogsRouter.get('/', async (request, response) => {
         likes: body.likes,
         user: user._id
         })
-      let sblogi = await newBlog.save()
-      console.log('saved Blog: ',sblogi)
-      const savedBlog = await Blog.findById(sblogi._id).populate('user', { username: 1, name: 1 })
-    
-  
+        console.log('newBlog: ',newBlog)
+      let savedBlog = await newBlog.save()
+      console.log('saved Blog: ',savedBlog)
 
-    
-      console.log('Finded BLOG: ',savedBlog)
-     // console.log('PPULATED BLOG: ',populatedBlog)
-      user.blogs = user.blogs.concat(savedBlog._id)
+      let savedBlogWithUserInfo = 
+      {
+        id: savedBlog._id,
+        title: savedBlog.title,
+        author: savedBlog.author,
+        url: savedBlog.url,
+        likes: savedBlog.likes,
+        user: {
+          id: savedBlog.user,
+          username: user.username,
+          name: user.name     
+        }
+      }
+/*
+      const savedFindedBlog = await Blog.findById(savedBlog._id).populate('user', { username: 1, name: 1 })       
+      console.log('Finded BLOG: ',savedFindedBlog)
+      user.blogs = user.blogs.concat(savedFindedBlog._id)
+*/
+      user.blogs = user.blogs.concat(savedBlogWithUserInfo.id)
+
       await user.save()
-      response.status(200).json(savedBlog.toJSON())
+      response.status(200).json(savedBlogWithUserInfo)
     }
     else {response.status(400).end()}
   })
