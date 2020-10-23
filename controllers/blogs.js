@@ -98,7 +98,7 @@ blogsRouter.get('/', async (request, response) => {
   }
 })
 
-  blogsRouter.put('/:id', (request, response, next) => {
+  blogsRouter.put('/:id', async (request, response, next) => {
     const body = request.body
 
     console.log(body)
@@ -107,11 +107,9 @@ blogsRouter.get('/', async (request, response) => {
       likes: body.likes
     }
   
-    Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
-      .then(updatedBlog => {
-        response.json(updatedBlog.toJSON())
-      })
-      .catch(error => next(error))
+   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+   .populate('user', { username: 1, name: 1 })
+   response.status(200).json(updatedBlog)
   })
   
 
