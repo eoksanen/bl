@@ -14,6 +14,7 @@ blogsRouter.get('/', async (request, response) => {
 blogsRouter.post('/:id/comments', async (request, response) => {
 
   const body = request.body
+  console.log(request.params.id)
 
   const blog = await Blog.findById(request.params.id)
 
