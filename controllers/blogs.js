@@ -68,12 +68,12 @@ blogsRouter.post('/:id/comments', async (request, response) => {
         likes: body.likes,
         user: user._id
         })
-        console.log('newBlog: ',newBlog)
       let savedBlog = await newBlog.save()
       console.log('saved Blog: ',savedBlog)
 
       let savedBlogWithUserInfo = 
       {
+        comments: [{comment: 'test comment from backend'}],
         id: savedBlog._id,
         title: savedBlog.title,
         author: savedBlog.author,
@@ -93,6 +93,7 @@ blogsRouter.post('/:id/comments', async (request, response) => {
       user.blogs = user.blogs.concat(savedBlogWithUserInfo.id)
 
       await user.save()
+      console.log('SAVEDBLOGWITHUSERINFO ', savedBlogWithUserInfo)
       response.status(200).json(savedBlogWithUserInfo)
     }
     else {response.status(400).end()}
@@ -142,7 +143,7 @@ blogsRouter.post('/:id/comments', async (request, response) => {
       likes: body.likes
     }
   
-   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true, useFindAndModify: false })
    .populate('user', { username: 1, name: 1 })
    response.status(200).json(updatedBlog)
   })
