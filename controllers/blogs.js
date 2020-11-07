@@ -43,6 +43,41 @@ blogsRouter.post('/:id/comments', async (request, response) => {
   }
   else {response.status(400).end()}
 })
+
+blogsRouter.delete('/:id/comments/cmid', async (request, response) => {
+    
+  console.log('printed TOKEN: ',request.token)
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+  if (!request.token || !decodedToken.id) {
+    return response.status(401).json({ error: 'token missing or invalid' })
+  }
+
+  console.log('userid: ', decodedToken.id)
+
+  // user still exists in db
+  const user = await User.findById(decodedToken.id)
+  const blog = await Blog.findById(request.params.id)
+
+ console.log('user: ', user)
+  
+  console.log('blog: ', blog)
+
+  if(blog.user && user.id.toString()){
+
+    
+    if(decodedToken.id.toString() === blog.user.toString()){
+
+      await Blog.findByIdAndRemove(request.params.id)
+      response.status(204).end()
+  }
+  else{
+    response.status(401).end('do not permit to delete')
+  }
+}
+else{
+  response.status(400).end('do not permit to delete')
+}
+})
   
 
   blogsRouter.post('/', async (request, response) => {
@@ -117,7 +152,7 @@ blogsRouter.post('/:id/comments', async (request, response) => {
     
     console.log('blog: ', blog)
 
-    if(blog.user && user.id.toString()){
+    if(blog.user && user.id){
 
       
       if(decodedToken.id.toString() === blog.user.toString()){

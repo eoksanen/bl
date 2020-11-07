@@ -2,11 +2,15 @@ const commentsRouter = require('express').Router()
 const jwt = require('jsonwebtoken')
 
 const Comment = require('../models/comment')
+const User = require('../models/user')
+const Blog = require('../models/blog')
 
 
-  commentsRouter.delete('/:id', async (request, response) => {
+  commentsRouter.delete('/:blog_id/:comment_id', async (request, response) => {
     
     console.log('printed TOKEN: ',request.token)
+    console.log('BLOG ID ', request.params.blog_id)
+    console.log('COMMENT ID', request.params.comment_id)
     const decodedToken = jwt.verify(request.token, process.env.SECRET)
     if (!request.token || !decodedToken.id) {
       return response.status(401).json({ error: 'token missing or invalid' })
@@ -14,17 +18,23 @@ const Comment = require('../models/comment')
 
     console.log('Userid: ', decodedToken.id)
 
-    // blog still exists in db
-    const comment = await Comment.findById(request.params.id)
+    // blog, user, comment still exists in db
+    const user = await User.findById(decodedToken.id)
+    const blog = await Blog.findById(request.params.blog_id)
+    const comment = await Comment.findById(request.params.comment_id)
    
     console.log('comment: ', comment)
 
-    if(comment.blog && blog.id.toString()){
+    console.log('user: ', user)
+    
+    console.log('blog: ', blog)
+
+    if(blog.user && user.id){
 
       
-      if(decodedToken.id.toString() === comment.blog.toString()){
+      if(decodedToken.id.toString() === blog.user.toString()){
 
-        await Comment.findByIdAndRemove(request.params.id)
+        await Comment.findByIdAndRemove(request.params.comment_id)
         response.status(204).end()
     }
     else{
